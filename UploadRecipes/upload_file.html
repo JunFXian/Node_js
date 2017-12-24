@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Upload Recipes</title>
+		<style>
+    		body{text-align:center;}
+    		form{display:block;border:1px solid black;padding:20px;}
+        fieldset{text-align:left;}
+		</style>
+	</head>
+	<body>
+    	<h1>Share your favorite recipes</h1>
+
+<!-- Here is the list of <form> attributes:
+accept-charset	Specifies the charset used in the submitted form (default: the page charset).
+action	Specifies an address (url) where to submit the form (default: the submitting page).
+autocomplete	Specifies if the browser should autocomplete the form (default: on).
+enctype	Specifies the encoding of the submitted data (default: is url-encoded).
+method	Specifies the HTTP method used when submitting the form (default: GET).
+name	Specifies a name used to identify the form (for DOM usage: document.forms.name).
+novalidate	Specifies that the browser should not validate the form.
+target	Specifies the target of the address in the action attribute (default: _self). -->
+
+<!-- The action attribute defines the action to be performed when the form is submitted 
+Normally, the form data is sent to a web page on the server when the user clicks on the submit button. -->
+<!-- <input type="submit"> defines a button for submitting the form data to a form-handler.
+The form-handler is typically a server page with a script for processing input data.
+The form-handler is specified in the form's action attribute -->
+<!-- The target attribute specifies if the submitted result will open in a new browser tab, a frame, or in the current window. The default value is "_self" which means the form will be submitted in the current window. -->
+<!-- The method attribute specifies the HTTP method (GET or POST) to be used when submitting the form data 
+When to Use GET?
+The default method when submitting form data is GET.
+However, when GET is used, the submitted form data will be visible in the page address field:
+Notes on GET:
+Appends form-data into the URL in name/value pairs
+The length of a URL is limited (about 3000 characters)
+Never use GET to send sensitive data! (will be visible in the URL)
+Useful for form submissions where a user want to bookmark the result
+GET is better for non-secure data, like query strings in Google
+When to Use POST?
+Always use POST if the form data contains sensitive or personal information. The POST method does not display the submitted form data in the page address field.
+Notes on POST:
+POST has no size limitations, and can be used to send large amounts of data.
+Form submissions with POST cannot be bookmarked -->
+
+    	<form action="/recipeupload" method="POST">
+        Recipe name: <input type="text" name="recipename" value="Name"><br><br>
+    		<fieldset>
+          <legend>Recipe ingredients:</legend>
+          1. <input type="text" name="ingredient1" size="100"><br>
+          2. <input type="text" name="ingredient2" size="100"><br>
+          3. <input type="text" name="ingredient3" size="100"><br>
+          4. <input type="text" name="ingredient4" size="100"><br>
+          5. <input type="text" name="ingredient5" size="100"><br>
+          6. <input type="text" name="ingredient6" size="100"><br>
+          7. <input type="text" name="ingredient7" size="100"><br>
+          8. <input type="text" name="ingredient8" size="100"><br>
+          9. <input type="text" name="ingredient9" size="100"><br>
+          10. <input type="text" name="ingredient10" size="100"><br>
+        </fieldset>
+        <br><br>
+        <fieldset>
+          <legend>Steps:</legend>
+          1. <input type="text" name="step1" size="200"><br>
+          2. <input type="text" name="step2" size="200"><br>
+          3. <input type="text" name="step3" size="200"><br>
+          4. <input type="text" name="step4" size="200"><br>
+          5. <input type="text" name="step5" size="200"><br>
+          6. <input type="text" name="step6" size="200"><br>
+          7. <input type="text" name="step7" size="200"><br>
+          8. <input type="text" name="step8" size="200"><br>
+          9. <input type="text" name="step9" size="200"><br>
+          10. <input type="text" name="step10" size="200"><br>
+  			</fieldset>
+        <br>
+        <input type="submit" value="Submit">
+        <br>
+		</form>
+	</body>
+</html>
