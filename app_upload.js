@@ -11,8 +11,8 @@ const mysql = require('mysql');
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'user',
-    password: 'password',
+    user: 'root',
+    password: 'mysql1234',
     database: 'RecipesDB'
 });
 
@@ -49,6 +49,12 @@ function processForm(req, res) {
             if (err) throw err;
             console.log('Connected!');
         });
+        var recipeRecord = { name: fields.name, servings: fields.servings, image: fields.image };
+        connection.query('INSERT INTO recipes SET ?', recipeRecord, function(err, res){
+            if (err) throw err;
+            console.log('Insert new recipe record to DB');
+
+        })
         connection.end(function(err){
             if (err) {
                 console.log('Disconnection DB error.');
