@@ -11,9 +11,9 @@ const mysql = require('mysql');
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'username',
-    password: 'password',
-    database: 'yourDB'
+    user: 'root',
+    password: 'mysql1234',
+    database: 'RecipesDB'
 });
 
 var server = http.createServer(function (req, res) {
@@ -24,9 +24,6 @@ var server = http.createServer(function (req, res) {
     }
 });
 
-// replace this with the location to save uploaded files
-var upload_path = "/Users/junfx/Desktop/node_js/UploadRecipes/Recipes";
- 
 function displayForm(res) {
     // html page containing upload form
     fs.readFile("upload_form.html", function (err, data) {
