@@ -11,11 +11,12 @@ const mysql = require('mysql');
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'username',
-    password: 'password',
-    database: 'yourDB'
+    user: 'root',
+    password: 'mysql1234',
+    database: 'RecipesDB'
 });
 
+//creates a server on your computer
 var server = http.createServer(function (req, res) {
     if (req.method.toLowerCase() == 'get') {
         displayForm(res);
