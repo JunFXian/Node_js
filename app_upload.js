@@ -11,9 +11,9 @@ const mysql = require('mysql');
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'username',
-    password: 'password',
-    database: 'yourDB'
+    user: 'root',
+    password: 'mysql1234',
+    database: 'RecipesDB'
 });
 
 var server = http.createServer(function (req, res) {
@@ -48,19 +48,76 @@ function processForm(req, res) {
         connection.connect(function(err){
             if (err) throw err;
             console.log('Connected!');
+            uploadRecipesData(fields);
         });
-        var recipeRecord = { name: fields.name, servings: fields.servings, image: fields.image };
-        connection.query('INSERT INTO recipes SET ?', recipeRecord, function(err, res){
-            if (err) throw err;
-            console.log('Insert new recipe record to DB');
+    });
+}
 
-        })
-        connection.end(function(err){
-            if (err) {
-                console.log('Disconnection DB error.');
-                return;
-            }
-        })
+function uploadRecipesData(fields) {
+    var recipeRecord = { name: fields.name, servings: fields.servings, image: fields.image };
+    var recipeId = 0;
+    connection.query('INSERT INTO recipes SET ?', recipeRecord, function(err, res){
+        if (err) throw err;
+        console.log('Insert new recipe record to DB');
+        recipeId = res.insertId;
+        uploadIngredientsData(fields, recipeId);
+        uploadStepsData(fields, recipeId);
+        endConnect();
+    });
+}
+
+function uploadIngredientsData(fields, id) {
+    var ingrArray = [ fields.quan0, fields.quan1, fields.quan2, fields.quan3, fields.quan4, 
+    fields.quan5, fields.quan6, fields.quan7, fields.quan8, fields.quan9 ];
+    var ingredientRecord = [];
+    var ingredientRecordsArray = [];
+    Object.keys(ingrArray).forEach(function(index) {
+        if (ingrArray[index] != 0) {
+            //keys of the fields, so the value with the key can be accessed via fields[quan]
+            var quan = "quan" + index;
+            var meas = "meas" + index;
+            var ingr = "ingr" + index;
+            ingredientRecord = { recipeId: id, quantity: fields[quan], measure: fields[meas], 
+                ingredient: fields[ingr] };
+            ingredientRecordsArray.push(ingredientRecord);
+        }
+    });
+    connection.query('INSERT INTO ingredients SET ?', ingredientRecordsArray, function(err, res){
+        if (err) throw err;
+        console.log('Insert new ingredients record to DB');
+    });
+}
+
+function uploadStepsData(fields, id) {
+    var stepArray = [ fields.short0, fields.short1, fields.short2, fields.short3, fields.short4, 
+    fields.short5, fields.short6, fields.short7, fields.short8, fields.short9 ];
+    var stepRecord = [];
+    var stepRecordsArray = [];
+    Object.keys(stepArray).forEach(function(index) {
+        if (stepArray[index]) {
+            //keys of the fields, so the value with the key can be accessed via fields[short]
+            var short = "short" + index;
+            var desc = "desc" + index;
+            var video = "video" + index;
+            var thumb = "thumb" + index;
+            stepRecord = { recipeId: id, stepId: (index+1), shortDescription: fields[short], 
+                description: fields[desc], videoURL: fields[video], thumbnailURL: fields[thumb] };
+            stepRecordsArray.push(stepRecord);
+        }
+    });
+    connection.query('INSERT INTO steps SET ?', stepRecordsArray, function(err, res){
+        if (err) throw err;
+        console.log('Insert new steps record to DB');
+    });
+}
+              
+function endConnect() {
+    connection.end(function(err){
+        if (err) {
+            console.log('Disconnection DB error.');
+            return;
+        }
+        console.log('Disconnected DB');
     });
 }
 
