@@ -11,9 +11,9 @@ const mysql = require('mysql');
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'mysql1234',
-    database: 'RecipesDB'
+    user: 'user_name',
+    password: 'password',
+    database: 'yourDB'
 });
 
 var server = http.createServer(function (req, res) {
