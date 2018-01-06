@@ -11,9 +11,9 @@ const mysql = require('mysql');
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'user_name',
-    password: 'password',
-    database: 'yourDB'
+    user: 'root',
+    password: 'mysql1234',
+    database: 'RecipesDB'
 });
 
 var server = http.createServer(function (req, res) {
@@ -39,17 +39,18 @@ function displayForm(res) {
 function processForm(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
-        //Store the data from the fields in your data store.
-        //The data store could be a file or database or any other store based on your 
-        //application.
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.write('received the data: \n\n');
-        res.end(util.inspect({fields: fields, files: files}));
         connection.connect(function(err){
             if (err) throw err;
             console.log('Connected!');
             uploadRecipesData(fields);
         });
+        //Store the data from the fields in your data store.
+        //The data store could be a file or database or any other store based on your 
+        //application.
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.write('Received the data. Thank you!');
+        // res.end(util.inspect({fields: fields, files: files}));
+        res.end();
     });
 }
 
@@ -77,12 +78,12 @@ function uploadIngredientsData(fields, id) {
             var quan = "quan" + index;
             var meas = "meas" + index;
             var ingr = "ingr" + index;
-            ingredientRecord = { recipeId: id, quantity: fields[quan], measure: fields[meas], 
-                ingredient: fields[ingr] };
+            ingredientRecord = [ id, fields[quan], fields[meas], fields[ingr] ];
             ingredientRecordsArray.push(ingredientRecord);
         }
     });
-    connection.query('INSERT INTO ingredients SET ?', ingredientRecordsArray, function(err, res){
+    connection.query('INSERT INTO ingredients (recipeId, quantity, measure, ingredient) VALUES ?', 
+        [ingredientRecordsArray], function(err, res){
         if (err) throw err;
         console.log('Insert new ingredients record to DB');
     });
@@ -100,12 +101,14 @@ function uploadStepsData(fields, id) {
             var desc = "desc" + index;
             var video = "video" + index;
             var thumb = "thumb" + index;
-            stepRecord = { recipeId: id, stepId: (index+1), shortDescription: fields[short], 
-                description: fields[desc], videoURL: fields[video], thumbnailURL: fields[thumb] };
+            //"-0" so the string part parses to int type
+            var stepIndex = (index-0) + 1;
+            stepRecord = [ id, stepIndex, fields[short], fields[desc], fields[video], fields[thumb] ];
             stepRecordsArray.push(stepRecord);
         }
     });
-    connection.query('INSERT INTO steps SET ?', stepRecordsArray, function(err, res){
+    connection.query('INSERT INTO steps (recipeId, stepId, shortDescription, description, videoURL, thumbnailURL) VALUES ?', 
+        [stepRecordsArray], function(err, res){
         if (err) throw err;
         console.log('Insert new steps record to DB');
     });
