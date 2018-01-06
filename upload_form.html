@@ -61,6 +61,10 @@ Form submissions with POST cannot be bookmarked -->
           <fieldset>
             <legend>Recipe ingredients:</legend>
             <ul style="list-style-type:none">
+              <li>quantity: <input type="number" name="quan0" value="0">
+                  measure: <input type="text" name="meas0">
+                  ingredient: <input type="text" name="ingr0">
+              </li>
               <li>quantity: <input type="number" name="quan1" value="0">
                   measure: <input type="text" name="meas1">
                   ingredient: <input type="text" name="ingr1">
@@ -97,18 +101,6 @@ Form submissions with POST cannot be bookmarked -->
                   measure: <input type="text" name="meas9">
                   ingredient: <input type="text" name="ingr9">
               </li>
-              <li>quantity: <input type="number" name="quan10" value="0">
-                  measure: <input type="text" name="meas10">
-                  ingredient: <input type="text" name="ingr10" >
-              </li>
-              <li>quantity: <input type="number" name="quan11" value="0">
-                  measure: <input type="text" name="meas11">
-                  ingredient: <input type="text" name="ingr11">
-              </li>
-              <li>quantity: <input type="number" name="quan12" value="0">
-                  measure: <input type="text" name="meas12">
-                  ingredient: <input type="text" name="ingr12">
-              </li>
             </ul>  
             <textarea id="ingr_note" name="ingr_note" placeholder="Notes of ingredients" rows="5" cols="100"></textarea>
             <br/>
@@ -119,82 +111,58 @@ Form submissions with POST cannot be bookmarked -->
           <fieldset>
             <legend>Steps:</legend>
             <ul style="list-style-type:none">
-              <li>1. <input type="text" name="short1"> <br/>
+              <li>1. <input type="text" name="short0"> <br/>
+                  Description: <input type="text" name="desc0" size="180"> <br/>
+                  Video URL: <input type="url" name="video0" size="70">
+                  Thumbnail URL: <input type="url" name="thumb0" size="70">
+              </li>
+              <li>2. <input type="text" name="short1"> <br/>
                   Description: <input type="text" name="desc1" size="180"> <br/>
                   Video URL: <input type="url" name="video1" size="70">
                   Thumbnail URL: <input type="url" name="thumb1" size="70">
               </li>
-              <li>2. <input type="text" name="short2"> <br/>
+              <li>3. <input type="text" name="short2"> <br/>
                   Description: <input type="text" name="desc2" size="180"> <br/>
                   Video URL: <input type="url" name="video2" size="70">
                   Thumbnail URL: <input type="url" name="thumb2" size="70">
               </li>
-              <li>3. <input type="text" name="short3"> <br/>
+              <li>4. <input type="text" name="short3"> <br/>
                   Description: <input type="text" name="desc3" size="180"> <br/>
                   Video URL: <input type="url" name="video3" size="70">
                   Thumbnail URL: <input type="url" name="thumb3" size="70">
               </li>
-              <li>4. <input type="text" name="short4"> <br/>
+              <li>5. <input type="text" name="short4"> <br/>
                   Description: <input type="text" name="desc4" size="180"> <br/>
                   Video URL: <input type="url" name="video4" size="70">
                   Thumbnail URL: <input type="url" name="thumb4" size="70">
               </li>
-              <li>5. <input type="text" name="short5"> <br/>
+              <li>6. <input type="text" name="short5"> <br/>
                   Description: <input type="text" name="desc5" size="180"> <br/>
                   Video URL: <input type="url" name="video5" size="70">
                   Thumbnail URL: <input type="url" name="thumb5" size="70">
               </li>
-              <li>6. <input type="text" name="short6"> <br/>
+              <li>7. <input type="text" name="short6"> <br/>
                   Description: <input type="text" name="desc6" size="180"> <br/>
                   Video URL: <input type="url" name="video6" size="70">
                   Thumbnail URL: <input type="url" name="thumb6" size="70">
               </li>
-              <li>7. <input type="text" name="short7"> <br/>
+              <li>8. <input type="text" name="short7"> <br/>
                   Description: <input type="text" name="desc7" size="180"> <br/>
                   Video URL: <input type="url" name="video7" size="70">
                   Thumbnail URL: <input type="url" name="thumb7" size="70">
               </li>
-              <li>8. <input type="text" name="short8"> <br/>
+              <li>9. <input type="text" name="short8"> <br/>
                   Description: <input type="text" name="desc8" size="180"> <br/>
                   Video URL: <input type="url" name="video8" size="70">
                   Thumbnail URL: <input type="url" name="thumb8" size="70">
               </li>
-              <li>9. <input type="text" name="short9"> <br/>
+              <li>10. <input type="text" name="short9"> <br/>
                   Description: <input type="text" name="desc9" size="180"> <br/>
                   Video URL: <input type="url" name="video9" size="70">
                   Thumbnail URL: <input type="url" name="thumb9" size="70">
               </li>
-              <li>10. <input type="text" name="short10"> <br/>
-                  Description: <input type="text" name="desc10" size="180"> <br/>
-                  Video URL: <input type="url" name="video10" size="70">
-                  Thumbnail URL: <input type="url" name="thumb10" size="70">
-              </li>
-              <li>11. <input type="text" name="short11"> <br/>
-                  Description: <input type="text" name="desc11" size="180"> <br/>
-                  Video URL: <input type="url" name="video11" size="70">
-                  Thumbnail URL: <input type="url" name="thumb11" size="70">
-              </li>
-              <li>12. <input type="text" name="short12"> <br/>
-                  Description: <input type="text" name="desc12" size="180"> <br/>
-                  Video URL: <input type="url" name="video12" size="70">
-                  Thumbnail URL: <input type="url" name="thumb12" size="70">
-              </li>
-              <li>13. <input type="text" name="short13"> <br/>
-                  Description: <input type="text" name="desc13" size="180"> <br/>
-                  Video URL: <input type="url" name="video13" size="70">
-                  Thumbnail URL: <input type="url" name="thumb13" size="70">
-              </li>
-              <li>14. <input type="text" name="short14"> <br/>
-                  Description: <input type="text" name="desc14" size="180"> <br/>
-                  Video URL: <input type="url" name="video14" size="70">
-                  Thumbnail URL: <input type="url" name="thumb14" size="70">
-              </li>
-              <li>15. <input type="text" name="short15"> <br/>
-                  Description: <input type="text" name="desc15" size="180"> <br/>
-                  Video URL: <input type="url" name="video15" size="70">
-                  Thumbnail URL: <input type="url" name="thumb15" size="70">
-              </li>
-            <ul>
+            </ul>
+            <textarea id="step_note" name="step_note" placeholder="Notes of steps" rows="5" cols="100"></textarea>
             <br/>
           </fieldset>
 
