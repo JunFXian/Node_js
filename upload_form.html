@@ -47,11 +47,12 @@ Form submissions with POST cannot be bookmarked -->
     	<form action="" method="POST" enctype="multipart/form-data">
 
           <label for="name">Recipe name:</label>
-          <input type="text" id="name" name="name" placeholder="Enter your recipe name"/><br/>
+          <!-- Accessible HTML5 Forms – Required Inputs: use "required" attribute -->
+          <input type="text" id="name" name="name" placeholder="Enter your recipe name" required/><br/>
           <br/>
 
           <label for="servings">Servings:</label>
-          <input type="number" id="servings" name="servings" placeholder="0" value="0" /><br/>
+          <input type="number" id="servings" name="servings" placeholder="0" value="0" required/><br/>
           <br/>
 
           <label for="image">Recipe image ULR:</label>

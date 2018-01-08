@@ -1,8 +1,7 @@
-
-//reference:
-// Abbas Suterwala: https://www.sitepoint.com/creating-and-handling-forms-in-node-js/
+//combine upload and download script
 
 const http = require('http');
+const fs = require('fs');
 const formidable = require('formidable');
 const util = require('util');
 const mysql = require('mysql');
@@ -15,6 +14,9 @@ const connection = mysql.createConnection({
     database: 'RecipesDB'
 });
 
+var jsonFilePath = '/Users/junfx/Desktop/node_js/UploadRecipes/Recipes/recipes.json';
+var data = {'recipes': []};
+var recipesArray = [];
 var isDoneUploadIngr = false;
 var isDoneUploadStep = false;
 
@@ -92,7 +94,8 @@ function uploadIngredientsData(fields, id) {
         //determine when to disconnect the DB
         isDoneUploadIngr = true;
         if (isDoneUploadIngr && isDoneUploadStep) {
-            endConnect();
+        	console.log("Start downloading the data");
+            downloadRecipesData();
         }
     });
 }
@@ -125,11 +128,98 @@ function uploadStepsData(fields, id) {
         //determine when to disconnect the DB
         isDoneUploadStep = true;
         if (isDoneUploadIngr && isDoneUploadStep) {
-            endConnect();
+            console.log("Start downloading the data");
+            downloadRecipesData();
         }
     });
 }
               
+function downloadRecipesData() {
+	var recipesCols = 'recipes.id, recipes.name, recipes.servings, recipes.image';
+	var ingredientsCols = 'ingredients.quantity, ingredients.measure, ingredients.ingredient';
+	var stepsCols = 'steps.stepId, steps.shortDescription, steps.description, steps.videoURL, steps.thumbnailURL';
+	var recipesQuery = 'SELECT ' + recipesCols + ' FROM recipes';
+	var ingredientsQuery = 'SELECT ' + ingredientsCols + ' FROM ingredients';
+	var stepsQuery = 'SELECT ' + stepsCols + ' FROM steps';
+
+  	data.recipes = recipesArray;
+	connection.query(recipesQuery, function(err, result, fields) {
+  		if(err) throw err;
+  		console.log('Data received from DB');
+  		Object.keys(result).forEach(function(key) {
+  			var resultCount = result.length;
+			var rowData = JSON.stringify(result[key]);
+        	var jsonData =  JSON.parse(rowData);
+
+        	var ingrTable = 'ingredients';
+        	queryData(ingredientsQuery, ingrTable, jsonData.id, function(err, index, array){
+        		if (err) {
+        			// error handling code goes here
+            		console.log("ERROR : ",err);            
+        		} else {            
+            		// code to execute on data retrieval
+            		if (jsonData.id == index) {
+            			jsonData.ingredients = array;
+            		} else {
+            			jsonData.ingredients = [];
+            		}
+
+            		var stepTable = 'steps';
+        			queryData(stepsQuery, stepTable, jsonData.id, function(err, index, array){
+        				if (err) {
+        					// error handling code goes here
+            				console.log("ERROR : ",err);            
+        				} else {            
+            				// code to execute on data retrieval
+            				if (jsonData.id == index) {
+            					jsonData.steps = array;
+            				} else {
+            					jsonData.steps = [];
+            				}
+
+            				recipesArray.push(jsonData);
+            				appendFile(jsonFilePath, data);
+
+            				//determine when to disconnect: after all results are downloaded
+            				if (key == resultCount-1) {
+            					endConnect();
+            				}
+        				}    
+        			});
+        		}    
+        	});
+        });
+	});
+}
+
+function queryData(query, table, id, callback) {
+	connection.query(query + ' WHERE ' + table + '.recipeId = ' + id, 
+		function(err, result, fields) {
+  		if (err) {
+  			throw err;
+  			callback(err, 0, null);
+  		} else {
+  			var dataArray = [];
+  			Object.keys(result).forEach(function(key) {
+ 				var rowData = JSON.stringify(result[key]);
+        		var jsonData = JSON.parse(rowData);
+       			dataArray.push(jsonData);
+  			});
+  			//use util module to display array elements
+  			// console.log(util.inspect(dataArray, false, null));
+  			//returning result from MySQL query have to do the processing on the 
+  			//results from the db query on a callback only
+  			callback(null, id, dataArray);
+  		}
+  	});
+}
+
+function appendFile(jsonFile, content) {
+	fs.writeFile(jsonFile, JSON.stringify(content), 'utf8', function(err) {
+   		if (err) throw err;
+   	});
+}
+
 function endConnect() {
     connection.end(function(err){
         if (err) {

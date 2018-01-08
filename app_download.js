@@ -3,19 +3,20 @@
 //	https://stackoverflow.com/questions/14974864/combine-or-merge-json-on-node-js-without-jquery
 //	https://stackoverflow.com/questions/18361930/node-js-returning-result-from-mysql-query
 
-const http = require('http');
 const fs = require('fs');
 const mysql = require('mysql');
 const util = require('util');
 
 var jsonFilePath = '/Users/junfx/Desktop/node_js/UploadRecipes/Recipes/recipes.json';
+var data = {'recipes': []};
+var recipesArray = [];
 
 //create a connection to the DB
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: '***',
-    password: '***',
-    database: '***DB'
+    user: 'root',
+    password: 'mysql1234',
+    database: 'RecipesDB'
 });
 
 connection.connect(function(err) {
@@ -32,53 +33,62 @@ function downloadRecipesData() {
 	var ingredientsQuery = 'SELECT ' + ingredientsCols + ' FROM ingredients';
 	var stepsQuery = 'SELECT ' + stepsCols + ' FROM steps';
 
-  	var data = {'recipes': []};
-  	fs.writeFile(jsonFilePath, JSON.stringify(data), 'utf8', function(err) {
-   		if (err) throw err;
-   	});
-
+  	data.recipes = recipesArray;
 	connection.query(recipesQuery, function(err, result, fields) {
   		if(err) throw err;
   		console.log('Data received from DB');
-  		var recipeArray = [];
   		Object.keys(result).forEach(function(key) {
-  			var rowData = JSON.stringify(result[key]);
+  			var resultCount = result.length;
+			var rowData = JSON.stringify(result[key]);
         	var jsonData =  JSON.parse(rowData);
 
-        	var ingrData = [];
-        	queryData(ingredientsQuery, jsonData.id, function(err, array){
+        	var ingrTable = 'ingredients';
+        	queryData(ingredientsQuery, ingrTable, jsonData.id, function(err, index, array){
         		if (err) {
         			// error handling code goes here
             		console.log("ERROR : ",err);            
         		} else {            
             		// code to execute on data retrieval
-            		ingrData = array;
+            		if (jsonData.id == index) {
+            			jsonData.ingredients = array;
+            		} else {
+            			jsonData.ingredients = [];
+            		}
+
+            		var stepTable = 'steps';
+        			queryData(stepsQuery, stepTable, jsonData.id, function(err, index, array){
+        				if (err) {
+        					// error handling code goes here
+            				console.log("ERROR : ",err);            
+        				} else {            
+            				// code to execute on data retrieval
+            				if (jsonData.id == index) {
+            					jsonData.steps = array;
+            				} else {
+            					jsonData.steps = [];
+            				}
+
+            				recipesArray.push(jsonData);
+            				appendFile(jsonFilePath, data);
+
+            				//determine when to disconnect: after all results are downloaded
+            				if (key == resultCount-1) {
+            					endConnect();
+            				}
+        				}    
+        			});
         		}    
         	});
-        	
-        	console.log(JSON.stringify(jsonData));
-
-        	// jsonData.push(ingrData);
-
-        	// console.log(JSON.stringify(jsonData));
-
-        	
-
-  			var stepData = queryData(stepsQuery, jsonData.id);
-        	data.recipes.steps = stepData;
-
-        	recipeArray.push(jsonData);
         });
-        // endConnect();
 	});
 }
 
-function queryData(query, id, callback) {
-	connection.query(query + ' WHERE ingredients.recipeId = ' + id, 
+function queryData(query, table, id, callback) {
+	connection.query(query + ' WHERE ' + table + '.recipeId = ' + id, 
 		function(err, result, fields) {
   		if (err) {
   			throw err;
-  			callback(err, null);
+  			callback(err, 0, null);
   		} else {
   			var dataArray = [];
   			Object.keys(result).forEach(function(key) {
@@ -88,25 +98,26 @@ function queryData(query, id, callback) {
   			});
   			//use util module to display array elements
   			// console.log(util.inspect(dataArray, false, null));
-  			callback(null, dataArray);
+  			//returning result from MySQL query have to do the processing on the 
+  			//results from the db query on a callback only
+  			callback(null, id, dataArray);
   		}
   	});
 }
 
-function appendFile(jsonFile, jsonObj) {
-	fs.readFile(jsonFile, 'utf8', function readFileCallback(err, data){
-    	if (err){
-        	console.log(err);
-    	} else {
-    		var parent = JSON.parse(data);
-    		console.log(parent);
-    		// parent.push(jsonObj); //add some data
-    		// var json = JSON.stringify(parentObj); //convert it back to json
-    		// fs.writeFile(jsonFile, json, 'utf8', function(err) {
-   			// 	if (err) throw err;
-   			// }); // write it back 
-		}
-	});
+function appendFile(jsonFile, content) {
+	// fs.readFile(jsonFile, 'utf8', function readFileCallback(err, data){
+ //    	if (err){
+ //        	console.log(err);
+ //    	} else {
+ //    		fs.appendFile(jsonFile, content, 'utf8', function(err) {
+ //   				if (err) throw err;
+ //   			}); // write it back 
+	// 	}
+	// });
+	fs.writeFile(jsonFile, JSON.stringify(content), 'utf8', function(err) {
+   		if (err) throw err;
+   	});
 }
 
 // function extendJSON(target) {
