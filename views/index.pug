@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  
+  div
+    h2 Create recipe
+    a(href="/create", class="btn btn-xl btn-warning") Create
+
+  div
+    h2 Recipes
+
+    ul
+    each recipe in recipes
+      li
+        strong
+          = recipe.name
+        | &nbsp; &nbsp; &nbsp; &nbsp;
+        strong
+          = "- serving for: " + recipe.servings
+        | &nbsp; &nbsp; &nbsp;
+        a(href="/recipes/" + recipe.id, class="btn btn-xl btn-warning") Edit
+        

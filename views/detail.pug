@@ -1,0 +1,38 @@
+extends layout
+
+block content
+  h1= title
+  
+  div
+    h2 Recipe Ingredients
+
+    ul
+    each item in data.ingr_res
+      li
+        strong
+          = item.quantity + " " + item.measure + " " + item.ingredient
+
+
+  div
+    h2 Recipe steps
+
+    ul
+    each item in data.step_res
+      li
+        strong
+          = item.shortDescription
+        p
+          = item.description
+        br
+
+  div
+    a(href="/" + id + "/update", class="btn btn-xl btn-warning") Update
+    | &nbsp; &nbsp; &nbsp;
+    a(href="/" + id + "/delete", class="btn btn-xl btn-warning") Delete
+    | &nbsp; &nbsp; &nbsp;
+    a(href="/", class="btn btn-xl btn-warning") Back
+
+
+      
+
+        

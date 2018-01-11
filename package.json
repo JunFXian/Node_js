@@ -1,18 +1,26 @@
 {
-  "name": "UploadRecipes",
-  "version": "1.0.0",
-  "description": "Upload recipes to backend server",
-  "main": "app_upload.js",
-  "dependencies": {
-    "express": "^4.16.2",
-    "formidable": "^1.1.1",
-    "mysql": "^2.15.0"
-  },
-  "devDependencies": {},
+  "name": "uploadapp",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www"
   },
-  "keywords": [],
-  "author": "junxian",
-  "license": "ISC"
+  "dependencies": {
+    "async": "^2.6.0",
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "mongoose": "^4.13.9",
+    "morgan": "~1.9.0",
+    "mysql2": "^1.5.1",
+    "pug": "2.0.0-beta11",
+    "sequelize": "^4.30.2",
+    "sequelize-cli": "^3.2.0",
+    "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.10"
+  }
 }
