@@ -71,12 +71,21 @@ exports.recipe_detail = function(req, res, next) {
 
 // Display recipe create form on GET.
 exports.recipe_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Recipe create GET');
+    // res.send('NOT IMPLEMENTED: Recipe create GET');
+    res.render('create', { 
+  				title: 'Create recipe',
+  				ingr_number: [1, 2, 3, 4, 5, 6],
+  				step_number: [1, 2, 3, 4, 5]
+  			});
 };
 
 // Handle recipe create on POST.
-exports.recipe_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Recipe create POST');
+exports.recipe_create_post = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe create POST');
+    console.log(req.body);
+    // models.Recipe.create({
+
+    // })
 };
 
 // Display recipe delete form on GET.

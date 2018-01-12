@@ -27,22 +27,29 @@ router.get('/', recipe_controller.index);
 // GET request for one Recipe.
 router.get('/recipes/:id', recipe_controller.recipe_detail);
 
-// GET request for creating a Book. NOTE This must come before routes that display Book (uses id).
+// GET request for creating a Recipe. NOTE This must come before 
+//routes that display Recipe (uses id).
 router.get('/create', recipe_controller.recipe_create_get);
 
-// POST request for creating Book.
+// POST request for creating Recipe.
 router.post('/create', recipe_controller.recipe_create_post);
 
-// GET request to delete Book.
+// GET request for creating a Recipe detail
+router.get('/create/detail', recipe_controller.recipe_createdetail_get);
+
+// POST request for creating Recipe detail
+router.post('/create/detail', recipe_controller.recipe_createdetail_post);
+
+// GET request to delete Recipe.
 router.get('/:id/delete', recipe_controller.recipe_delete_get);
 
-// POST request to delete Book.
+// POST request to delete Recipe.
 router.post('/:id/delete', recipe_controller.recipe_delete_post);
 
-// GET request to update Book.
+// GET request to update Recipe.
 router.get('/:id/update', recipe_controller.recipe_update_get);
 
-// POST request to update Book.
+// POST request to update Recipe.
 router.post('/:id/update', recipe_controller.recipe_update_post);
 
 
