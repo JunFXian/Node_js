@@ -13,11 +13,13 @@ block content
     ul
     each recipe in recipes
       li
-        strong
+        strong(style="font-size: 20px;")
           = recipe.name
         | &nbsp; &nbsp; &nbsp; &nbsp;
-        strong
+        strong(style="font-size: 20px;")
           = "- serving for: " + recipe.servings
         | &nbsp; &nbsp; &nbsp;
         a(href="/recipes/" + recipe.id, class="btn btn-xl btn-warning") Edit
+        br
+        br
         

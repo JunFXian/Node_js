@@ -1,29 +1,38 @@
 extends layout
 
 block content
-  h1= title
+  h1= data.reci_res.name
+  |&nbsp; &nbsp; &nbsp;
+  p 
+    = "Servings: " + data.reci_res.servings
   
   div
     h2 Recipe Ingredients
 
-    ul
-    each item in data.ingr_res
-      li
-        strong
-          = item.quantity + " " + item.measure + " " + item.ingredient
-
+    if data.ingr_res.length != 0
+      ul
+      each item in data.ingr_res
+        li
+          strong
+            = item.quantity + " " + item.measure + " " + item.ingredient
+    else
+      p No ingredient
+    
 
   div
     h2 Recipe steps
 
-    ul
-    each item in data.step_res
-      li
-        strong
-          = item.shortDescription
-        p
-          = item.description
-        br
+    if data.step_res.length != 0
+      ul
+      each item in data.step_res
+        li
+          strong
+            = item.shortDescription
+          p
+            = item.description
+          br
+    else
+      p No step
 
   div
     a(href="/" + id + "/update", class="btn btn-xl btn-warning") Update

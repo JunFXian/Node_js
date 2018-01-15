@@ -13,6 +13,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var validator = require('express-validator');
 
 //define the routes modules the app needs
 var index = require('./routes/index');
@@ -33,6 +34,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(validator());
 //use the Express.static middleware to get Express to serve all the static files 
 //in the directory /public in the project root
 app.use(express.static(path.join(__dirname, 'public')));

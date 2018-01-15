@@ -1,8 +1,14 @@
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
 var models  = require('../models');
 var Recipe = require('../models/recipe');
 var express = require('express');
+var Sequelize = require('sequelize');
 
 var async = require('async');
+
+const Op = Sequelize.Op;
 
 //for home page
 exports.index = function(req, res, next) {
@@ -40,10 +46,23 @@ exports.recipe_detail = function(req, res, next) {
 //     // results is now equals to: {one: 1, two: 2}
 // });
     async.parallel({
+    	reci_res: function(callback){
+    		models.Recipe.findOne({
+    			where: {
+    				id: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(reci_info){
+    			callback(null, reci_info);
+    		});
+    	},
     	ingr_res: function(callback){
     		models.Ingredient.findAll({
     			where: {
-    				recipeId: req.params.id
+    				recipeId: {
+    					[Op.eq]: req.params.id
+    				}
     			}
     		}).then(function(ingr_list){
     			callback(null, ingr_list);
@@ -52,7 +71,9 @@ exports.recipe_detail = function(req, res, next) {
     	step_res: function(callback){
     		models.Step.findAll({
     			where: {
-    				recipeId: req.params.id
+    				recipeId: {
+    					[Op.eq]: req.params.id
+    				}
     			}
     		}).then(function(step_list){
     			callback(null, step_list);
@@ -62,7 +83,6 @@ exports.recipe_detail = function(req, res, next) {
     		if (err) console.log(err);
     		// console.log(result);
     		res.render('detail', { 
-  				title: 'Recipe detail',
   				data: result,
   				id: req.params.id
   			});
@@ -70,22 +90,125 @@ exports.recipe_detail = function(req, res, next) {
 };
 
 // Display recipe create form on GET.
-exports.recipe_create_get = function(req, res) {
+exports.recipe_create_get = function(req, res, next) {
     // res.send('NOT IMPLEMENTED: Recipe create GET');
     res.render('create', { 
-  				title: 'Create recipe',
-  				ingr_number: [1, 2, 3, 4, 5, 6],
-  				step_number: [1, 2, 3, 4, 5]
+  				title: 'Create recipe'
   			});
 };
 
 // Handle recipe create on POST.
-exports.recipe_create_post = function(req, res, next) {
-    // res.send('NOT IMPLEMENTED: Recipe create POST');
-    console.log(req.body);
-    // models.Recipe.create({
+exports.recipe_create_post = [
+    // Validate that the name field is not empty.
+    body('recipename', 'Recipe name required').isLength({ min: 1 }).trim(),
+    // Sanitize (trim and escape) the name field.
+    sanitizeBody('recipename').trim().escape(),
+    // Process request after validation and sanitization.
+	function(req, res, next) {
+		// res.send('NOT IMPLEMENTED: Recipe create POST');
+		// Extract the validation errors from a request.
+        const errors = validationResult(req);
+    	if (!errors.isEmpty()) {
+            // There are errors. Render the form again with sanitized values/error messages.
+            res.render('create', { 
+  				title: 'Create recipe',
+  				errors: errors.array()
+  			});
+        	return;
+        } else {
+        	// Data from form is valid.
+        	models.Recipe.create({
+				name: req.body.recipename,
+    			servings: req.body.servings,
+    			image: req.body.imageUrl 
+        	}).then(function(newRecipe) {
+  				var ingr_num = req.body.ingrItemsNum;
+  				var step_num = req.body.stepsNum;
+  				var recipe_id = newRecipe.id;
+  				if (ingr_num || step_num) {
+  					res.redirect('/create/' + recipe_id + '/' + ingr_num + '/' + step_num);
+  				} else {
+  					res.redirect('/');
+  				}
+  			});
+        }
+    }
+];
 
-    // })
+// Display recipe create form on GET.
+exports.recipe_createdetail_get = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe create GET');
+    var ingrCount = [];
+    for (i = 0; i < req.params.ingr; i++) { 
+    	ingrCount.push(i);
+	}
+	var stepCount = [];
+    for (i = 0; i < req.params.step; i++) { 
+    	stepCount.push(i);
+	}
+    models.Recipe.findOne({
+    		where: {
+    			id: {
+    				[Op.eq]: req.params.id
+    			}
+    		}
+    	}).then(function(result){
+			res.render('createDetail', { 
+  				title: 'Create recipe',
+  				recipe: result,
+  				ingr_number: ingrCount,
+  				step_number: stepCount
+  			});
+  		});
+};
+
+// Handle recipe create on POST.
+exports.recipe_createdetail_post = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe create POST');
+    var ingrArr = [];
+    var ingrItem = {};
+    for (i = 0; i < req.params.ingr; i++) { 
+    	ingrItem = {
+    		quantity: req.body["quantity"+i],
+    		measure: req.body["measure"+i],
+    		ingredient: req.body["ingredient"+i],
+    		recipeId: req.params.id
+    	}
+    	ingrArr.push(ingrItem);
+    }
+    var stepArr = [];
+    var stepItem = {};
+    for (i = 0; i < req.params.step; i++) { 
+    	stepItem = {
+    		stepId: i+1,
+    		shortDescription: req.body["short"+i],
+    		description: req.body["description"+i],
+    		videoURL: req.body["videoUrl"+i],
+    		thumbnailURL: req.body["thumbUrl"+i],
+    		recipeId: req.params.id
+    	}
+    	stepArr.push(stepItem);
+    }
+
+    async.parallel({
+    	ingr_create: function(callback){
+    		models.Ingredient.bulkCreate(
+    			ingrArr
+    		).then(function(){
+    			callback(null);
+    		});
+    	},
+    	step_create: function(callback){
+    		models.Step.bulkCreate(
+    			stepArr
+    		).then(function(){
+    			callback(null);
+    		});
+    	}
+    }, function(err) {
+    		if (err) console.log(err);
+    		res.redirect('/');
+    });
 };
 
 // Display recipe delete form on GET.

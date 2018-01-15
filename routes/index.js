@@ -35,10 +35,10 @@ router.get('/create', recipe_controller.recipe_create_get);
 router.post('/create', recipe_controller.recipe_create_post);
 
 // GET request for creating a Recipe detail
-router.get('/create/detail', recipe_controller.recipe_createdetail_get);
+router.get('/create/:id/:ingr/:step', recipe_controller.recipe_createdetail_get);
 
 // POST request for creating Recipe detail
-router.post('/create/detail', recipe_controller.recipe_createdetail_post);
+router.post('/create/:id/:ingr/:step', recipe_controller.recipe_createdetail_post);
 
 // GET request to delete Recipe.
 router.get('/:id/delete', recipe_controller.recipe_delete_get);
