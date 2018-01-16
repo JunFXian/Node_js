@@ -10,4 +10,4 @@ Web client screenshot:
 
 An advanced version with Node.js, Express framwork, MySQL, and Sequelize ORM can be found under "uploadapp" directory.
 Web client screenshot:
-![alt text]()
+![alt text](https://github.com/JunFXian/Node_js/blob/master/Screen%20Shot%202018-01-16%20at%203.42.32%20PM.png)
