@@ -3,8 +3,12 @@
 //object, and lastly exports the router from the module (this 
 //is what allows the file to be imported into app.js)
 
+var models  = require('../models');
 var express = require('express');
 var router = express.Router();
+
+// Require controller modules.
+var recipe_controller = require('../controllers/recipeController');
 
 /* GET home page. */
 //The route defines a callback that will be invoked whenever 
@@ -18,11 +22,38 @@ var router = express.Router();
 //While the code doesn't currently use the next argument, it may be 
 //useful in the future if you want to add multiple route handlers to 
 //the '/' route path.
-router.get('/', function(req, res, next) {
-	//The method Response.render() is used to render a specified 
-	//template along with the values of named variables passed in an 
-	//object, and then send the result as a response
-  	res.render('index', { title: 'Express' });
-});
+router.get('/', recipe_controller.index);
+
+// GET request for one Recipe.
+router.get('/recipes/:id', recipe_controller.recipe_detail);
+
+// GET request for creating a Recipe. NOTE This must come before 
+//routes that display Recipe (uses id).
+router.get('/create', recipe_controller.recipe_create_get);
+
+// POST request for creating Recipe.
+router.post('/create', recipe_controller.recipe_create_post);
+
+// GET request for creating a Recipe detail
+router.get('/create/:id/:ingr/:step', recipe_controller.recipe_createdetail_get);
+
+// POST request for creating Recipe detail
+router.post('/create/:id/:ingr/:step', recipe_controller.recipe_createdetail_post);
+
+// GET request to delete Recipe.
+router.get('/:id/delete', recipe_controller.recipe_delete_get);
+
+// POST request to delete Recipe.
+router.post('/:id/delete', recipe_controller.recipe_delete_post);
+
+// GET request to update Recipe.
+router.get('/:id/update', recipe_controller.recipe_update_get);
+
+// POST request to update Recipe.
+router.post('/:id/update', recipe_controller.recipe_update_post);
+
+// POST request to update Recipe ingredient and step.
+router.post('/:id/update/:catagory/:itemId', recipe_controller.recipe_catagory_update_post);
+
 
 module.exports = router;

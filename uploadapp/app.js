@@ -1,5 +1,9 @@
 //reference:
 // https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/skeleton_website
+// https://github.com/sequelize/express-example
+// http://sequelize.readthedocs.io/en/1.7.0/articles/express/
+// http://docs.sequelizejs.com/manual/tutorial/migrations.html#the-sequelizerc-file
+// https://github.com/sequelize/sequelize/issues/5036
 
 //it is a configuation file for Express application object (app)
 
@@ -10,10 +14,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var validator = require('express-validator');
 
 //define the routes modules the app needs
 var index = require('./routes/index');
-var users = require('./routes/users');
+var about = require('./routes/about');
 
 //create the app object
 var app = express();
@@ -30,6 +35,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(validator());
 //use the Express.static middleware to get Express to serve all the static files 
 //in the directory /public in the project root
 app.use(express.static(path.join(__dirname, 'public')));
@@ -40,7 +46,7 @@ app.use('/', index);
 //defined in the imported files. So for example if the imported users module defines 
 //a route for /profile, you would access that route at /users/profile. We'll talk 
 //more about routes in a later article.
-app.use('/users', users);
+app.use('/about', about);
 
 //adds handler methods for errors and HTTP 404 responses
 // catch 404 and forward to error handler

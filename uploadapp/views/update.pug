@@ -1,0 +1,111 @@
+extends layout
+
+block content
+  h1= title
+  
+  form(action="/"+updateId+"/update", method="post", class="well")
+    div(class="form-group")
+      div(class="row")
+        input(type="text", name="recipenameupdate", class="form-control", placeholder=data.reci_res.name, required)
+      br
+      div(class="row")
+        div(class="col-md-1")
+          label(for="Servings")
+          |Servings
+        div(class="col-md-1")
+          input(type="number", name="servingsupdate", class="form-control", placeholder=data.reci_res.servings, required)
+        div(class="col-md-1")
+          label(for="ImageUrl")
+          | ImageUrl
+        div(class="col-md-9")
+          input(type="url", name="imageUrlupdate", class="form-control", placeholder=data.reci_res.image)
+    div
+      input(type="submit" class="btn btn-primary", Value="Update Recipe")
+  
+  br
+
+
+  div(class="row")
+    label(for="RecipeIngredients")
+      strong(style="font-size: 20px;")
+      = "Recipe ingredients:"
+
+  if data.ingr_res.length != 0
+    ul
+    each item in data.ingr_res
+      li
+      form(action="/"+updateId+"/update/ingredient/"+item.id, method="post", class="well")
+        div(class="form-group")
+          div(class="row")
+            div(class="col-md-1")
+              label(for="Quantity")
+              | Quantity
+            div(class="col-md-1")
+              input(type="number", name="quantityupdate", class="form-control", placeholder=item.quantity, required)
+            div(class="col-md-1")
+              label(for="Measure")
+              | Measure
+            div(class="col-md-2")
+              input(type="text", name="measureupdate", class="form-control", placeholder=item.measure, required)
+            div(class="col-md-2")
+              label(for="Ingredient")
+              | Ingredient
+            div(class="col-md-5")
+              input(type="text", name="ingredientupdate", class="form-control", placeholder=item.ingredient, required)
+        div
+          input(type="submit" class="btn btn-primary", Value="Update Ingredient")
+  else
+    p No ingredient  
+
+  br
+
+
+  div(class="row")
+    label(for="RecipeSteps")
+      strong(style="font-size: 20px;")
+      = "Recipe steps:"
+
+  if data.step_res.length != 0
+    ul
+    each item, i in data.step_res
+      li
+      form(action="/"+updateId+"/update/step/"+item.id, method="post", class="well")
+        div(class="form-group")
+          div(class="row")
+            div(class="col-md-2")
+              = i+1
+            div(class="col-md-6")
+              input(type="text", name="shortupdate", class="form-control", placeholder=item.shortDescription, required)
+          div(class="row")
+            div(class="col-md-2")
+              label(for="Description")
+              | Description
+            div(class="col-md-10")
+              input(type="text", name="descriptionupdate", class="form-control", placeholder=item.description, required)
+          div(class="row")
+            div(class="col-md-2")
+              label(for="VideoUrl")
+              | Video URL
+            div(class="col-md-10")
+              input(type="url", name="videoUrlupdate", class="form-control", placeholder=item.videoURL)
+          div(class="row")
+            div(class="col-md-2")
+              label(for="ThumbnailUrl")
+              | Thumbnail URL
+            div(class="col-md-10")
+              input(type="url", name="thumbUrlupdate", class="form-control", placeholder=item.thumbnailURL)
+        div
+          input(type="submit" class="btn btn-primary", Value="Update Step")
+
+  else
+    p No step
+
+  br
+
+  div
+    a(href="/", class="btn btn-xl btn-warning") Back
+
+
+      
+
+        

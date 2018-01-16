@@ -5,4 +5,18 @@ body {
 
 a {
   color: #00B7FF;
+  width: 100px
+}
+
+h1, h2 {
+  font-weight: 100;
+}
+
+h1 {
+  font-size: 35px;
+  text-align: center;
+}
+
+ul li {
+  padding: 5px;
 }
