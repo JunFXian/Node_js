@@ -259,17 +259,111 @@ exports.recipe_delete_post = function(req, res, next) {
     	}
     }, function(err) {
     		if (err) console.log(err);
-    		// console.log(result);
     		res.redirect('/');
     });
 };
 
 // Display recipe update form on GET.
-exports.recipe_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Recipe update GET');
+exports.recipe_update_get = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe update GET');
+    async.parallel({
+    	reci_res: function(callback){
+    		models.Recipe.findOne({
+    			where: {
+    				id: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(reci_info){
+    			callback(null, reci_info);
+    		});
+    	},
+    	ingr_res: function(callback){
+    		models.Ingredient.findAll({
+    			where: {
+    				recipeId: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(ingr_list){
+    			callback(null, ingr_list);
+    		});
+    	},
+    	step_res: function(callback){
+    		models.Step.findAll({
+    			where: {
+    				recipeId: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(step_list){
+    			callback(null, step_list);
+    		});
+    	}
+    }, function(err, result) {
+    		if (err) console.log(err);
+    		// console.log(result);
+    		res.render('update', {
+    			title: 'Update recipe',
+  				data: result,
+  				updateId: req.params.id
+  			});
+    });
 };
 
 // Handle recipe update on POST.
-exports.recipe_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Recipe update POST');
+exports.recipe_update_post = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe update POST');
+    var ingrArr = [];
+    var ingrItem = {};
+    for (i = 0; i < req.params.ingr; i++) { 
+    	ingrItem = {
+    		quantity: req.body["quantity"+i],
+    		measure: req.body["measure"+i],
+    		ingredient: req.body["ingredient"+i],
+    		recipeId: req.params.id
+    	}
+    	ingrArr.push(ingrItem);
+    }
+    var stepArr = [];
+    var stepItem = {};
+    for (i = 0; i < req.params.step; i++) { 
+    	stepItem = {
+    		stepId: i+1,
+    		shortDescription: req.body["short"+i],
+    		description: req.body["description"+i],
+    		videoURL: req.body["videoUrl"+i],
+    		thumbnailURL: req.body["thumbUrl"+i],
+    		recipeId: req.params.id
+    	}
+    	stepArr.push(stepItem);
+    }
+
+    async.parallel({
+    	ingr_create: function(callback){
+    		models.Ingredient.bulkCreate(
+    			ingrArr
+    		).then(function(){
+    			callback(null);
+    		});
+    	},
+    	step_create: function(callback){
+    		models.Step.bulkCreate(
+    			stepArr
+    		).then(function(){
+    			callback(null);
+    		});
+    	}
+    }, function(err) {
+    		if (err) console.log(err);
+    		res.redirect('/');
+    });
+};
+
+// Handle recipe ingredient or step update on POST.
+exports.recipe_catagory_update_post = function(req, res, next) {
+	
+
+
+	
 };
