@@ -3,6 +3,7 @@
 // https://github.com/sequelize/express-example
 // http://sequelize.readthedocs.io/en/1.7.0/articles/express/
 // http://docs.sequelizejs.com/manual/tutorial/migrations.html#the-sequelizerc-file
+// https://github.com/sequelize/sequelize/issues/5036
 
 //it is a configuation file for Express application object (app)
 

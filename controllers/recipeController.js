@@ -212,13 +212,56 @@ exports.recipe_createdetail_post = function(req, res, next) {
 };
 
 // Display recipe delete form on GET.
-exports.recipe_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Recipe delete GET');
+exports.recipe_delete_get = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe delete GET');
+    res.render('delete', { 
+  				title: 'Delete recipe',
+  				deleteId: req.params.id
+  			});
 };
 
 // Handle recipe delete on POST.
-exports.recipe_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Recipe delete POST');
+exports.recipe_delete_post = function(req, res, next) {
+    // res.send('NOT IMPLEMENTED: Recipe delete POST');
+    async.parallel({
+    	reci_res: function(callback){
+    		models.Recipe.destroy({
+    			where: {
+    				id: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(){
+    			callback(null);
+    		});
+    	},
+    	ingr_res: function(callback){
+    		models.Ingredient.destroy({
+    			where: {
+    				recipeId: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(){
+    			callback(null);
+    		});
+    	},
+    	step_res: function(callback){
+    		models.Step.destroy({
+    			where: {
+    				recipeId: {
+    					[Op.eq]: req.params.id
+    				}
+    			}
+    		}).then(function(){
+    			callback(null);
+    		});
+    	}
+    }, function(err) {
+    		if (err) console.log(err);
+    		// console.log(result);
+    		res.redirect('/');
+    });
 };
 
 // Display recipe update form on GET.

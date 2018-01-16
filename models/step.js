@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     Step.belongsTo(models.Recipe, {
       onDelete: "CASCADE",
       foreignKey: {
+        name: 'recipeId',
         allowNull: false
       }
     });
