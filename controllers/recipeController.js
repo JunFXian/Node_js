@@ -314,56 +314,54 @@ exports.recipe_update_get = function(req, res, next) {
 // Handle recipe update on POST.
 exports.recipe_update_post = function(req, res, next) {
     // res.send('NOT IMPLEMENTED: Recipe update POST');
-    var ingrArr = [];
-    var ingrItem = {};
-    for (i = 0; i < req.params.ingr; i++) { 
-    	ingrItem = {
-    		quantity: req.body["quantity"+i],
-    		measure: req.body["measure"+i],
-    		ingredient: req.body["ingredient"+i],
-    		recipeId: req.params.id
-    	}
-    	ingrArr.push(ingrItem);
-    }
-    var stepArr = [];
-    var stepItem = {};
-    for (i = 0; i < req.params.step; i++) { 
-    	stepItem = {
-    		stepId: i+1,
-    		shortDescription: req.body["short"+i],
-    		description: req.body["description"+i],
-    		videoURL: req.body["videoUrl"+i],
-    		thumbnailURL: req.body["thumbUrl"+i],
-    		recipeId: req.params.id
-    	}
-    	stepArr.push(stepItem);
-    }
-
-    async.parallel({
-    	ingr_create: function(callback){
-    		models.Ingredient.bulkCreate(
-    			ingrArr
-    		).then(function(){
-    			callback(null);
-    		});
-    	},
-    	step_create: function(callback){
-    		models.Step.bulkCreate(
-    			stepArr
-    		).then(function(){
-    			callback(null);
-    		});
-    	}
-    }, function(err) {
-    		if (err) console.log(err);
-    		res.redirect('/');
-    });
+    models.Recipe.update({
+			name: req.body.recipenameupdate,
+    		servings: req.body.servingsupdate,
+    		image: req.body.imageUrlupdate 
+        },
+        {
+        	where: {
+    			id: {
+    				[Op.eq]: req.params.id
+    			}
+    		}
+        }).then(function() {
+  			res.redirect('/recipes/' + req.params.id);
+  		});
 };
 
 // Handle recipe ingredient or step update on POST.
 exports.recipe_catagory_update_post = function(req, res, next) {
-	
-
-
-	
+	if (req.params.catagory == "ingredient") {
+		models.Ingredient.update({
+			quantity: req.body.quantityupdate,
+    		measure: req.body.measureupdate,
+    		ingredient: req.body.ingredientupdate
+        },
+        {
+        	where: {
+    			id: {
+    				[Op.eq]: req.params.itemId
+    			}
+    		}
+        }).then(function() {
+  			res.redirect('/recipes/' + req.params.id);
+  		});
+	} else {
+		models.Step.update({
+    		shortDescription: req.body.shortupdate,
+    		description: req.body.descriptionupdate,
+    		videoURL: req.body.videoUrlupdate,
+    		thumbnailURL: req.body.thumbUrlupdate
+        },
+        {
+        	where: {
+    			id: {
+    				[Op.eq]: req.params.itemId
+    			}
+    		}
+        }).then(function() {
+  			res.redirect('/recipes/' + req.params.id);
+  		});
+	}
 };

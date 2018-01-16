@@ -50,10 +50,10 @@ router.post('/:id/delete', recipe_controller.recipe_delete_post);
 router.get('/:id/update', recipe_controller.recipe_update_get);
 
 // POST request to update Recipe.
-router.post('/:id/update/recipe/:item', recipe_controller.recipe_update_post);
+router.post('/:id/update', recipe_controller.recipe_update_post);
 
 // POST request to update Recipe ingredient and step.
-router.post('/:id/update/:catagory/:item', recipe_controller.recipe_catagory_update_post);
+router.post('/:id/update/:catagory/:itemId', recipe_controller.recipe_catagory_update_post);
 
 
 module.exports = router;
