@@ -4,6 +4,7 @@
 // http://sequelize.readthedocs.io/en/1.7.0/articles/express/
 // http://docs.sequelizejs.com/manual/tutorial/migrations.html#the-sequelizerc-file
 // https://github.com/sequelize/sequelize/issues/5036
+// https://github.com/droideveloper/RESTfulExample
 
 //it is a configuation file for Express application object (app)
 
@@ -15,10 +16,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var validator = require('express-validator');
+var restful_express_sequelize = require("restful-express-sequelize");
 
 //define the routes modules the app needs
 var index = require('./routes/index');
 var about = require('./routes/about');
+var json = require('./routes/json');
 
 //create the app object
 var app = express();
@@ -47,6 +50,7 @@ app.use('/', index);
 //a route for /profile, you would access that route at /users/profile. We'll talk 
 //more about routes in a later article.
 app.use('/about', about);
+app.use('/api', json);
 
 //adds handler methods for errors and HTTP 404 responses
 // catch 404 and forward to error handler
