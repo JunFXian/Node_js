@@ -1,22 +1,22 @@
 {
   "development": {
-    "username": "root",
-    "password": "mysql1234",
-    "database": "RecipeDB_dev",
+    "username": "***",
+    "password": "***",
+    "database": "***",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": "mysql1234",
-    "database": "RecipeDB_test",
+    "username": "***",
+    "password": "***",
+    "database": "R***",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": "mysql1234",
-    "database": "RecipeDB_prod",
+    "username": "***",
+    "password": "***",
+    "database": "***",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
